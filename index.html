@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>偏旁小猎人</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"PingFang SC",sans-serif;background:#1a1a2e;min-height:100vh;color:white;text-align:center}
+.page{display:none;padding:20px}
+.page.active{display:block}
+.title{font-size:2.2em;color:#FFD700;margin:30px 0 10px;text-shadow:2px 2px 8px rgba(255,215,0,.3)}
+.subtitle{color:#88c8ff;font-size:1em;margin-bottom:30px}
+.char-ball{width:60px;height:60px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:1.8em;color:white;font-weight:bold;margin:5px;animation:float 2s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.btn{background:linear-gradient(135deg,#FFD700,#FFA500);color:#1a1a2e;border:none;border-radius:50px;padding:14px 40px;font-size:1.1em;font-weight:bold;cursor:pointer;margin:8px}
+.btn:active{transform:scale(0.95)}
+.btn-blue{background:linear-gradient(135deg,#5dade2,#3498db);color:white}
+.btn-green{background:linear-gradient(135deg,#2ecc71,#27ae60);color:white}
+.status{display:flex;justify-content:space-between;padding:10px 15px;background:rgba(255,255,255,.1);border-radius:12px;margin-bottom:15px;font-size:0.95em}
+.progress{width:100%;height:10px;background:rgba(255,255,255,.1);border-radius:8px;overflow:hidden;margin-bottom:20px}
+.progress-fill{height:100%;border-radius:8px;background:linear-gradient(90deg,#2ecc71,#27ae60);transition:width .4s}
+.question{background:rgba(255,255,255,.08);border-radius:16px;padding:20px;margin-bottom:15px}
+.question-label{font-size:.9em;color:#88c8ff;margin-bottom:6px}
+.question-char{font-size:4em;color:#FFD700;margin:10px 0}
+.question-sub{font-size:.8em;color:#aaa}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
+.answer-btn{background:rgba(255,255,255,.12);border:3px solid transparent;border-radius:14px;padding:16px 8px;color:white;font-size:1em;cursor:pointer;min-height:70px}
+.answer-btn:active{transform:scale(0.95)}
+.answer-btn.correct{border-color:#2ecc71;background:rgba(46,204,113,.2)}
+.answer-btn.wrong{border-color:#e74c3c;background:rgba(231,76,60,.2);animation:shake .4s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.result-big{font-size:5em;margin:20px 0}
+.result-stars{font-size:2em;color:#FFD700;margin:10px 0}
+.info-box{background:rgba(255,255,255,.06);border-radius:12px;padding:15px;margin:15px 0;text-align:left}
+.info-box div{margin:4px 0;font-size:.9em;color:#ccc}
+.info-item{display:flex;align-items:center;gap:8px;margin:6px 0}
+.info-radical{font-size:1.3em;font-weight:bold;min-width:70px}
+.info-desc{font-size:.85em;color:#aaa}
+.word-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.word-tag{background:rgba(255,255,255,.15);border-radius:8px;padding:4px 10px;font-size:.9em}
+.tip-box{background:rgba(255,250,230,.1);border:1px solid rgba(255,200,100,.3);border-radius:10px;padding:10px 15px;margin-top:15px;font-size:.85em;color:#ccc;text-align:left}
+</style>
+</head>
+<body>
+
+<!-- 封面 -->
+<div id="cover" class="page active">
+  <div class="title">🧐 偏旁小猎人</div>
+  <div class="subtitle">吴炜坤专属 · 偏旁学习挑战</div>
+  <div style="display:flex;justify-content:center;gap:12px;margin:20px 0">
+    <div class="char-ball" style="background:linear-gradient(135deg,#e74c3c,#c0392b)">球</div>
+    <div class="char-ball" style="background:linear-gradient(135deg,#2ecc71,#27ae60)">往</div>
+    <div class="char-ball" style="background:linear-gradient(135deg,#3498db,#2980b9)">跑</div>
+  </div>
+  <div class="info-box">
+    <div style="color:#88c8ff;font-weight:bold;margin-bottom:8px">本周学习三个偏旁：</div>
+    <div class="info-item"><span style="color:#e74c3c;font-weight:bold">🔴 王字旁</span><span class="info-desc">— 和玉石有关</span></div>
+    <div class="info-item"><span style="color:#2ecc71;font-weight:bold">🟢 双人旁</span><span class="info-desc">— 和行走道路有关</span></div>
+    <div class="info-item"><span style="color:#3498db;font-weight:bold">🔵 足字旁</span><span class="info-desc">— 和脚步活动有关</span></div>
+  </div>
+  <button class="btn" onclick="startGame()">开始挑战 ⭐</button>
+  <button class="btn btn-blue" onclick="showLearn()">先学习 📖</button>
+</div>
+
+<!-- 学习页 -->
+<div id="learn" class="page">
+  <div class="title" style="font-size:1.6em">📖 偏旁学习</div>
+  <div class="info-box">
+    <div class="info-item"><span class="info-radical" style="color:#e74c3c">王字旁</span><span class="info-desc">大多和玉石有关</span></div>
+    <div class="word-tags"><span class="word-tag">球</span><span class="word-tag">珍</span><span class="word-tag">珠</span><span class="word-tag">琳</span><span class="word-tag">琅</span></div>
+  </div>
+  <div class="info-box">
+    <div class="info-item"><span class="info-radical" style="color:#2ecc71">双人旁</span><span class="info-desc">大多和行走、道路有关</span></div>
+    <div class="word-tags"><span class="word-tag">往</span><span class="word-tag">行</span><span class="word-tag">街</span><span class="word-tag">征</span><span class="word-tag">很</span></div>
+  </div>
+  <div class="info-box">
+    <div class="info-item"><span class="info-radical" style="color:#3498db">足字旁</span><span class="info-desc">大多和脚步活动有关</span></div>
+    <div class="word-tags"><span class="word-tag">跑</span><span class="word-tag">跳</span><span class="word-tag">路</span><span class="word-tag">跟</span><span class="word-tag">踩</span></div>
+  </div>
+  <div class="tip-box">💡 技巧：看到一个字，先想它的偏旁是什么，再判断和什么有关！</div>
+  <button class="btn btn-green" onclick="startGame()" style="margin-top:15px">去挑战 ⭐</button>
+  <button class="btn btn-blue" onclick="showScreen('cover')">返回</button>
+</div>
+
+<!-- 游戏页 -->
+<div id="game" class="page">
+  <div class="status">
+    <span>⭐ <span id="score">0</span></span>
+    <span><span id="done">0</span>/<span id="total">0</span></span>
+    <span>❤️ <span id="lives">3</span></span>
+  </div>
+  <div class="progress"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  <div class="question">
+    <div class="question-label">这个字是什么偏旁？</div>
+    <div class="question-char" id="questionChar">球</div>
+    <div class="question-sub" id="questionSub">提示：和玉石有关～</div>
+  </div>
+  <div class="answers" id="answers"></div>
+  <div class="tip-box" id="tipBox" style="display:none"></div>
+</div>
+
+<!-- 结果页 -->
+<div id="result" class="page">
+  <div class="result-big" id="resultEmoji">🎉</div>
+  <div class="result-stars" id="resultStars">⭐⭐⭐⭐⭐</div>
+  <div id="resultMsg" style="font-size:1.2em;margin:10px 0"></div>
+  <div id="resultAccuracy" style="color:#88c8ff;margin-bottom:15px"></div>
+  <div id="resultEncourage" style="color:#aaa;font-size:.95em;margin-bottom:15px"></div>
+  <button class="btn btn-green" onclick="startGame()">再玩一次 🔄</button>
+  <button class="btn" onclick="showScreen('cover')">返回首页</button>
+</div>
+
+<script>
+const radicals=[{radical:"王字旁",symbol:"𤣩",color:"#e74c3c",desc:"和玉石有关",emoji:"🔴",words:["球","珍","珠","琳","琅"]},{radical:"双人旁",symbol:"彳",color:"#2ecc71",desc:"和行走、道路有关",emoji:"🟢",words:["往","行","街","征","很"]},{radical:"足字旁",symbol:"⻊",color:"#3498db",desc:"和脚步活动有关",emoji:"🔵",words:["跑","跳","路","跟","踩"]}];
+let score=0,lives=3,done=0,total=0,correct=0,currentQ=0,qs=[],answered=false;
+function shuffle(a){let i=a.length-1;while(i>0){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function showScreen(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function showLearn(){showScreen('learn')}
+function startGame(){score=0;lives=3;done=0;correct=0;currentQ=0;document.getElementById('score').textContent=score;document.getElementById('lives').textContent=lives;document.getElementById('done').textContent=done;document.getElementById('progressFill').style.width='0%';let temp=[];radials.forEach(r=>{shuffle(r.words).slice(0,3).forEach(w=>{let dist=shuffle(radials.filter(r2=>r2.radical!==r.radical).flatMap(r2=>r2.words)).slice(0,3);let opts=shuffle([r.radical,...dist]);temp.push({word:w,correct:r.radical,options:opts,hint:r.desc,color:r.color})})});qs=shuffle(temp);total=qs.length;document.getElementById('total').textContent=total;showScreen('game');showQ()}
+function showQ(){if(currentQ>=qs.length){showResult();return}answered=false;let q=qs[currentQ];document.getElementById('questionChar').textContent=q.word;document.getElementById('questionSub').textContent='提示：'+q.hint+'～';document.getElementById('tipBox').style.display='none';let html='';q.options.forEach(o=>{let r=radicals.find(r2=>r2.radical===o);html+='<button class="answer-btn" onclick="check(\''+o+'\',this)"><span style="font-size:1.3em;color:#FFD700;font-weight:bold">'+o+'</span><br><span style="font-size:.75em;color:#aaa">'+ (r?r.symbol:'') +'</span></button>'});document.getElementById('answers').innerHTML=html}
+function check(opt,btn){if(answered)return;answered=true;let q=qs[currentQ],r=radicals.find(r2=>r2.radical===q.correct);btn.classList.add(opt===q.correct?'correct':'wrong');document.querySelectorAll('.answer-btn').forEach(b=>{if(b.dataset-opt===q.correct||b===btn&&opt===q.correct)b.classList.add('correct');b.style.pointerEvents='none'});if(opt===q.correct){score+=10;correct++;}else{lives--;if(lives<=0){setTimeout(showResult,800);return}}done++;document.getElementById('score').textContent=score;document.getElementById('lives').textContent=lives;document.getElementById('done').textContent=done;document.getElementById('progressFill').style.width=(done/total*100)+'%';setTimeout(()=>{currentQ++;showQ()},900)}
+function showResult(){let pct=Math.round(correct/total*100);document.getElementById('resultEmoji').textContent=pct===100?'🏆':pct>=70?'🎉':pct>=50?'👍':'💪';document.getElementById('resultStars').textContent='⭐'.repeat(Math.min(5,Math.ceil(pct/20)));document.getElementById('resultMsg').textContent=pct===100?'完美通关！偏旁小达人！':pct>=70?'很棒！再来一次可以更好！':pct>=50?'不错哦！继续加油！':'没关系的，多玩几次就熟悉了！';document.getElementById('resultAccuracy').textContent='正确率：'+correct+'/'+total+'（'+pct+'%）';document.getElementById('resultEncourage').textContent=pct>=70?'炜坤真棒！':'学习就是慢慢来的，加油！';showScreen('result')}
+showScreen('cover');
+</script>
+</body>
+</html>
